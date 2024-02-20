@@ -15,7 +15,7 @@ class ProfilDataLine extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-                fontSize: 21,
+                fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: kSecondaryColor),
           ),
@@ -37,7 +37,7 @@ class ProfilDataLine extends StatelessWidget {
             value,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-                fontSize: 21,
+                fontSize: 17,
                 fontWeight: FontWeight.w500,
                 color: kPrimaryColor),
           ),

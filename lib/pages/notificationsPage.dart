@@ -58,7 +58,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         SizedBox(
           height: kHeight(context) * 0.9,
           child: StreamBuilder<List<AlertPivot>>(
-              stream: streamAlertPivots(widget.employee.employeeId),
+              stream: streamAllAlertPivots(widget.employee.employeeId),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');

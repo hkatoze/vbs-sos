@@ -19,6 +19,7 @@ class _ProfilPageState extends State<ProfilPage> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
           elevation: 0,
           title: Container(
@@ -95,7 +96,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                           value: widget.employee.role,
                                         ),
                                         const SizedBox(
-                                          height: 50,
+                                          height: 25,
                                         ),
                                         SizedBox(
                                           width: 210,
@@ -154,7 +155,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                     borderRadius: BorderRadius.circular(30),
                                     child: Container(
                                       height: 240,
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 10),
                                       decoration: BoxDecoration(
                                           borderRadius:
