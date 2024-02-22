@@ -107,111 +107,125 @@ class _EmployeePageState extends State<EmployeePage> {
   Widget build(BuildContext context) {
     Offset distance = isPressed ? const Offset(10, 10) : const Offset(28, 28);
     double blur = isPressed ? 5.0 : 30.0;
+
     return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: kWhite,
-      appBar: MyAppBar(_scaffoldKey, context, widget.employee!),
-      drawer: MyDrawer(
-        employee: widget.employee!,
-      ),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        const SizedBox(
-          height: 20,
+        key: _scaffoldKey,
+        backgroundColor: kWhite,
+        appBar: MyAppBar(_scaffoldKey, context, widget.employee!),
+        drawer: MyDrawer(
+          employee: widget.employee!,
         ),
-        Image.asset(
-          "assets/images/Alert.${sirene ? "gif" : "png"}",
-          scale: sirene ? 6.4 : 4,
-        ),
-        Expanded(
-          child: Center(
-            child: Listener(
-              onPointerUp: (_) => setState(() {
-                //isPressed = false;
-                //alert();
-                //launchSirene();
-              }),
-              onPointerDown: (_) => setState(() {
-                isPressed = true;
+        body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
+              height: kHeight(context) * 0.92,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Image.asset(
+                      "assets/images/Alert.${sirene ? "gif" : "png"}",
+                      scale: sirene ? 13.9 : 8.6,
+                    ),
+                    SizedBox(
+                      height: kHeight(context) * 0.1,
+                    ),
+                    Center(
+                      child: Listener(
+                        onPointerUp: (_) => setState(() {
+                          //isPressed = false;
+                          //alert();
+                          //launchSirene();
+                        }),
+                        onPointerDown: (_) => setState(() {
+                          isPressed = true;
 
-                AwesomeDialog(
-                  context: context,
-                  animType: AnimType.scale,
-                  dialogType: DialogType.question,
-                  btnOkText: "ENVOYER",
-                  btnOkColor: kSecondaryColor,
-                  customHeader: Text(
-                    "SOS\nmessage",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: kSecondaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 21),
-                  ),
-                  body: Center(
-                    child: Card(
-                        child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: messageController,
-                        maxLines: 8, //or null
-                        decoration: const InputDecoration.collapsed(
-                            hintText: "Ecrivez un message ici (facultatif)"),
+                          AwesomeDialog(
+                            context: context,
+                            animType: AnimType.scale,
+                            dialogType: DialogType.question,
+                            btnOkText: "ENVOYER",
+                            btnOkColor: kSecondaryColor,
+                            customHeader: Text(
+                              "SOS\nmessage",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: kSecondaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 21),
+                            ),
+                            body: Center(
+                              child: Card(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: messageController,
+                                  maxLines: 8, //or null
+                                  decoration: const InputDecoration.collapsed(
+                                      hintText:
+                                          "Ecrivez un message ici (facultatif)"),
+                                ),
+                              )),
+                            ),
+                            onDismissCallback: (value) {
+                              setState(() {
+                                isPressed = false;
+                              });
+                            },
+                            btnOkOnPress: () async {
+                              setState(() {
+                                isPressed = false;
+                              });
+
+                              alert();
+                            },
+                          ).show();
+                        }),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 100),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: bgColor,
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: blur,
+                                    offset: -distance,
+                                    color: Colors.white,
+                                    inset: isPressed),
+                                BoxShadow(
+                                    blurRadius: blur,
+                                    offset: distance,
+                                    color: const Color(0xFFA7A9AF),
+                                    inset: isPressed)
+                              ]),
+                          child: SizedBox(
+                            height: 150,
+                            width: 150,
+                            child: Image.asset("assets/images/alert_btn.png"),
+                          ),
+                        ),
                       ),
-                    )),
-                  ),
-                  onDismissCallback: (value) {
-                    setState(() {
-                      isPressed = false;
-                    });
-                  },
-                  btnOkOnPress: () async {
-                    setState(() {
-                      isPressed = false;
-                    });
-
-                    alert();
-                  },
-                ).show();
-              }),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 100),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: bgColor,
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: blur,
-                          offset: -distance,
-                          color: Colors.white,
-                          inset: isPressed),
-                      BoxShadow(
-                          blurRadius: blur,
-                          offset: distance,
-                          color: const Color(0xFFA7A9AF),
-                          inset: isPressed)
-                    ]),
-                child: SizedBox(
-                  height: 200,
-                  width: 200,
-                  child: Image.asset("assets/images/alert_btn.png"),
-                ),
-              ),
-            ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25),
-          child: Text(
-            "Appuyer sur le bouton pour lancer un SOS",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          height: kHeight(context) * 0.1,
-        )
-      ]),
-    );
+                    ),
+                    SizedBox(
+                      height: kHeight(context) * 0.1,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      child: Text(
+                        "Appuyer sur le bouton pour lancer un SOS",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: kHeight(context) * 0.1,
+                    )
+                  ]),
+            )));
   }
 }

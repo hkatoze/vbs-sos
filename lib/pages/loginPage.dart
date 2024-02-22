@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:icons_plus/icons_plus.dart';
 import 'package:page_transition/page_transition.dart';
@@ -45,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       //Go to login Page
       toPage(1);
+      checkPermission();
     }
   }
 
@@ -94,6 +96,11 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  void checkPermission() async {
+    await Geolocator.checkPermission();
+    await Geolocator.requestPermission();
+  }
+
   void toPage(int page) {
     controller.animateToPage(page,
         duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
@@ -104,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         backgroundColor: kPrimaryColor,
         body: SizedBox(
-            height: kHeight(context) * 0.99,
+            height: kHeight(context) * 2,
             child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(

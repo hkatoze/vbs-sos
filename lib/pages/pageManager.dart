@@ -36,12 +36,6 @@ class _PageManagerState extends State<PageManager> {
   void initState() {
     super.initState();
     _navigationController = CircularBottomNavigationController(selectedPos);
-    checkPermission();
-  }
-
-  void checkPermission() async {
-    await Geolocator.checkPermission();
-    await Geolocator.requestPermission();
   }
 
   @override

@@ -55,14 +55,7 @@ void logout(BuildContext context, Widget currentPage) async {
                       );
                       await DatabaseManager.instance.clearDatabase();
 
-                      Fluttertoast.showToast(
-                          msg: "Déconnexion",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.TOP,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 15.0);
+                      showToast("Déconnexion", ToastType.SUCCESS);
 
                       Restart.restartApp();
                     },
