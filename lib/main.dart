@@ -4,7 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:vbs_sos/constants.dart';
 import 'package:vbs_sos/pages/components/alertPopup.dart';
 import 'package:vbs_sos/pages/mainpage.dart';
@@ -77,7 +77,7 @@ class _VbsSosAppState extends State<VbsSosApp> {
   void initState() {
     super.initState();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('Notification reçue: ${message.notification?.title}');
+      debugPrint('Notification reçue: ${message.data}');
       launchPop(context);
     });
 

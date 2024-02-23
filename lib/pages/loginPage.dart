@@ -111,13 +111,13 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         backgroundColor: kPrimaryColor,
         body: SizedBox(
-            height: kHeight(context) * 0.99,
+            height: kHeight(context) * 1.1,
             child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     SizedBox(
-                      height: kHeight(context),
+                      height: kHeight(context) * 1.1,
                       child: Stack(children: [
                         Positioned(
                           top: 0,

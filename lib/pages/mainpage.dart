@@ -19,7 +19,7 @@ class _MainpageState extends State<Mainpage> {
   @override
   void initState() {
     super.initState();
-    //DatabaseManager.instance.clearDatabase();
+    DatabaseManager.instance.clearDatabase();
     fetchEmployeeInformation();
   }
 
