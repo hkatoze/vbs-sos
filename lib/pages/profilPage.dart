@@ -43,7 +43,7 @@ class _ProfilPageState extends State<ProfilPage> {
             child: Column(
               children: [
                 SizedBox(
-                  height: kHeight(context),
+                  height: kHeight(context) * 1.2,
                   child: Stack(children: [
                     Positioned(
                         top: 430,
@@ -61,7 +61,6 @@ class _ProfilPageState extends State<ProfilPage> {
                                       width: kWidth(context) * 0.1,
                                     ),
                                     Expanded(
-                                        child: Container(
                                       child: Column(children: [
                                         ProfilDataLine(
                                           label: "Nom",
@@ -110,7 +109,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                               bgColor: kSecondaryColor),
                                         ),
                                       ]),
-                                    )),
+                                    ),
                                     Container(
                                       width: kWidth(context) * 0.1,
                                     ),

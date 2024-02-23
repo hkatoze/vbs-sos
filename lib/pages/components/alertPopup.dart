@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vbs_sos/constants.dart';
 import 'package:vbs_sos/pages/components/defaltBtn.dart';
+import 'package:vbs_sos/services/api_services.dart';
 
 class AlertPopup extends StatefulWidget {
   const AlertPopup({super.key});
@@ -10,6 +11,8 @@ class AlertPopup extends StatefulWidget {
 }
 
 class _AlertPopupState extends State<AlertPopup> {
+  void confirmStatut(String status) async {}
+
   @override
   Widget build(BuildContext context) {
     return Container(

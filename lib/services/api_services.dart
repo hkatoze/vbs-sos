@@ -146,3 +146,12 @@ Future<ApiResponseModel> checkCodeForResetPassword(
     return ApiResponseModel(message: "$e");
   }
 }
+
+Future<ApiResponseModel> updateAlertApi(int alertId, String status) async {
+  final response =
+      await axios('$endpoint/api/alerts/$alertId', methode: 'POST', donnees: {
+    'alertStatus': status,
+  });
+
+  return ApiResponseModel(message: response["message"], data: response["data"]);
+}
