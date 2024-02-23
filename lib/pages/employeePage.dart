@@ -8,6 +8,8 @@ import 'package:vbs_sos/functions.dart';
 import 'package:vbs_sos/models/alert.dart';
 import 'package:vbs_sos/models/alertPivot.dart';
 import 'package:vbs_sos/models/employee.dart';
+import 'package:vbs_sos/pages/components/alertPopup.dart';
+import 'package:vbs_sos/pages/components/defaltBtn.dart';
 import 'package:vbs_sos/pages/components/myAppBar.dart';
 import 'package:vbs_sos/pages/components/myDrawer.dart';
 import 'package:vbs_sos/services/api_services.dart';
@@ -30,6 +32,10 @@ class _EmployeePageState extends State<EmployeePage> {
   TextEditingController messageController = TextEditingController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void initState() {
+    super.initState();
+  }
 
   Future<void> getLocation() async {
     Position position = await Geolocator.getCurrentPosition(
@@ -212,13 +218,13 @@ class _EmployeePageState extends State<EmployeePage> {
                       height: kHeight(context) * 0.1,
                     ),
                     const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      padding: EdgeInsets.symmetric(horizontal: 50),
                       child: Text(
                         "Appuyer sur le bouton pour lancer un SOS",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 20,
+                            fontSize: 17,
                             fontWeight: FontWeight.bold),
                       ),
                     ),

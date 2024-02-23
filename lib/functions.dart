@@ -24,12 +24,15 @@ void logout(BuildContext context, Widget currentPage) async {
           ),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-          title: Center(
-            child: Text(
-              "Voulez-vous vraiment vous déconnectez?\nVous ne recevrez plus d'alertes de votre entreprise ni envoyer d'alertes.",
-              style: TextStyle(fontSize: 16.0, color: kSecondaryColor),
-              textAlign: TextAlign.center,
-            ),
+          title: Text(
+            "Voulez-vous vraiment vous déconnectez?",
+            style: TextStyle(fontSize: 16.0, color: kSecondaryColor),
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            "Vous ne recevrez plus d'alertes de votre entreprise ni envoyer d'alertes.",
+            style: TextStyle(fontSize: 16.0, color: kSecondaryColor),
+            textAlign: TextAlign.center,
           ),
           actions: [
             Center(
