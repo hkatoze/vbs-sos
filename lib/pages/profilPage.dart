@@ -98,13 +98,13 @@ class _ProfilPageState extends State<ProfilPage> {
                                           height: 25,
                                         ),
                                         SizedBox(
-                                          width: 210,
+                                          width: 220,
                                           child: DefaultBtn(
                                               event: () {
                                                 showChangePasswordModal(
                                                     context, widget.employee);
                                               },
-                                              titleSize: 15,
+                                              titleSize: 14,
                                               title: "Changer mot de passe",
                                               bgColor: kSecondaryColor),
                                         ),

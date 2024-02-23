@@ -126,7 +126,9 @@ class _AdminPageState extends State<AdminPage> {
                             height: kHeight(context) * 0.5,
                             child: StreamBuilder<List<AlertPivot>>(
                                 stream: streamAlertPivots(
-                                    widget.employee.employeeId, "IN DANGER"),
+                                    widget.employee.employeeId,
+                                    widget.employee.companyId,
+                                    "IN DANGER"),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
@@ -200,7 +202,9 @@ class _AdminPageState extends State<AdminPage> {
                             height: kHeight(context) * 0.5,
                             child: StreamBuilder<List<AlertPivot>>(
                                 stream: streamAlertPivots(
-                                    widget.employee.employeeId, "SAFE"),
+                                    widget.employee.employeeId,
+                                    widget.employee.companyId,
+                                    "SAFE"),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
@@ -274,7 +278,9 @@ class _AdminPageState extends State<AdminPage> {
                             height: kHeight(context) * 0.5,
                             child: StreamBuilder<List<AlertPivot>>(
                                 stream: streamAlertPivots(
-                                    widget.employee.employeeId, "IN PROGRESS"),
+                                    widget.employee.employeeId,
+                                    widget.employee.companyId,
+                                    "IN PROGRESS"),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');

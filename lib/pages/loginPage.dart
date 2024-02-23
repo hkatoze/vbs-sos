@@ -276,7 +276,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   ),
                                                   SizedBox(
                                                     width:
-                                                        kWidth(context) * 0.5,
+                                                        kWidth(context) * 0.7,
                                                     child: Text(
                                                       "En continuant vous acceptez être géolocaliser ou/et téléphoner via VBS-SOS en cas d'alerte de votre part.",
                                                       textAlign:

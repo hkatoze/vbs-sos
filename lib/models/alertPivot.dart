@@ -6,12 +6,13 @@ class AlertPivot {
   final Alert alert;
   final Employee employee;
   final int? employeeAlertId;
+  List<AlertPivot>? alertsInProgress;
 
-  AlertPivot({
-    required this.alert,
-    required this.employee,
-    this.employeeAlertId,
-  });
+  AlertPivot(
+      {required this.alert,
+      required this.employee,
+      this.employeeAlertId,
+      this.alertsInProgress});
 
   factory AlertPivot.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
