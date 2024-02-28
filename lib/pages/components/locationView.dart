@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
 import 'package:vbs_sos/constants.dart';
-import 'package:vbs_sos/models/employee.dart';
+
 import 'package:webview_flutter/webview_flutter.dart';
 
 class LocationWebview extends StatefulWidget {
-  final Employee employee;
+  final String employeeName;
   final String link;
   const LocationWebview(
-      {super.key, required this.employee, required this.link});
+      {super.key, required this.employeeName, required this.link});
 
   @override
   State<LocationWebview> createState() => _LocationWebviewState();
 }
 
 class _LocationWebviewState extends State<LocationWebview> {
-  late WebViewController _controller;
+  late WebViewController controller;
   String _url = 'https://www.example.com';
   bool _isLoading = true;
   void initState() {
@@ -50,7 +50,7 @@ class _LocationWebviewState extends State<LocationWebview> {
         title: Container(
           padding: const EdgeInsets.only(left: 30.0),
           child: Text(
-            "Emplacement : ${widget.employee.lastname} ${widget.employee.firstname}",
+            "Emplacement : ${widget.employeeName}",
             style: const TextStyle(
               fontSize: 17.0,
               fontWeight: FontWeight.bold,
@@ -69,7 +69,7 @@ class _LocationWebviewState extends State<LocationWebview> {
             initialUrl: _url,
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
-              _controller = webViewController;
+              controller = webViewController;
             },
             onPageStarted: (String url) {
               setState(() {
@@ -95,11 +95,12 @@ class _LocationWebviewState extends State<LocationWebview> {
   }
 }
 
-void showLocationModal(BuildContext context, Employee employee, String link) {
+void showLocationModal(BuildContext context, String employeeName, String link) {
   showModalBottomSheet(
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
       context: context,
       isScrollControlled: true,
-      builder: (context) => LocationWebview(employee: employee, link: link));
+      builder: (context) =>
+          LocationWebview(employeeName: employeeName, link: link));
 }

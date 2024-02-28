@@ -1,6 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:vbs_sos/constants.dart';
 import 'package:vbs_sos/models/alertPivot.dart';
 
@@ -23,24 +26,11 @@ class _AccordionListItemState extends State<AccordionListItem> {
   double? lat;
   double? long;
 
-  @override
-  void initState() {
-    super.initState();
-    getLocation();
-  }
-
-  Future<void> getLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
-    setState(() {
-      lat = position.latitude;
-      long = position.longitude;
-    });
-  }
-
   void localize() {
-    showLocationModal(context, widget.alert.employee,
-        "https://www.google.com/maps/search/?api=1&query=$lat,$long");
+    showLocationModal(
+        context,
+        "${widget.alert.employee.lastname} ${widget.alert.employee.firstname}",
+        "https://www.google.com/maps/search/?api=1&query=${widget.alert.alert.alertLocation.latitude},${widget.alert.alert.alertLocation.longitude}");
   }
 
   Future<void> call() async {
@@ -48,10 +38,33 @@ class _AccordionListItemState extends State<AccordionListItem> {
         widget.alert.employee.phone_number);
   }
 
+  String formaterDate(Timestamp timestamp) {
+    DateTime now = DateTime.now();
+
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(
+        timestamp.seconds * 1000 + (timestamp.nanoseconds / 1000000).round());
+
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      DateFormat heureFormat = DateFormat.Hm('fr');
+      return heureFormat.format(date);
+    } else if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day - 1) {
+      return 'Hier à ${DateFormat.Hm('fr').format(date)}';
+    } else if (date.year == now.year && date.month == now.month) {
+      return '${DateFormat.d('fr').format(date)} ${DateFormat.MMMM('fr').format(date)} à ${DateFormat.Hm('fr').format(date)}';
+    } else {
+      return '${DateFormat.d('fr').format(date)} ${DateFormat.MMMM('fr').format(date)} ${DateFormat.Hm('fr').format(date)}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
           color: const Color.fromARGB(255, 237, 237, 237),
           borderRadius: BorderRadius.circular(5)),
@@ -97,12 +110,17 @@ class _AccordionListItemState extends State<AccordionListItem> {
                 child: Text(
                   widget.alert.alert.alertStatus == "IN DANGER"
                       ? "EN DANGER"
-                      : "HORS DE DANGER",
+                      : (widget.alert.alert.alertStatus == "IN PROGRESS"
+                          ? "PAS DE REPONSE"
+                          : "HORS DE DANGER"),
                   style: TextStyle(
-                      fontSize: 10,
-                      color: widget.alert.alert.alertStatus == "IN DANGER"
-                          ? Colors.red
-                          : Colors.green),
+                    fontSize: 10,
+                    color: widget.alert.alert.alertStatus == "IN DANGER"
+                        ? Colors.red
+                        : (widget.alert.alert.alertStatus == "IN PROGRESS"
+                            ? Colors.orange
+                            : Colors.green),
+                  ),
                 ),
               ),
             ]),
@@ -110,27 +128,80 @@ class _AccordionListItemState extends State<AccordionListItem> {
           height: 5,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-                width: 100,
-                height: 30,
-                child: DefaultBtn(
-                    event: () => localize(),
-                    titleSize: 10,
-                    title: "Localiser",
-                    bgColor: kSecondaryColor)),
-            const SizedBox(
-              width: 5,
+            Text(
+              formaterDate(widget.alert.alert.alertDatetime),
+              style: const TextStyle(fontSize: 10, color: Colors.grey),
             ),
-            SizedBox(
-                width: 100,
-                height: 30,
-                child: DefaultBtn(
-                    event: () => call(),
-                    title: "Appeler",
-                    titleSize: 10,
-                    bgColor: kPrimaryColor))
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                    width: 100,
+                    height: 30,
+                    child: DefaultBtn(
+                        event: () => widget.alert.alert.alertStatus ==
+                                "IN PROGRESS"
+                            ? AwesomeDialog(
+                                context: context,
+                                animType: AnimType.scale,
+                                dialogType: DialogType.info,
+                                body: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 1),
+                                  child: Column(children: [
+                                    Text(
+                                      "${widget.alert.employee.lastname} ${widget.alert.employee.firstname} ne peut pas être localiser pour le moment.",
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: kSecondaryColor),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                            width: 135,
+                                            height: 30,
+                                            child: DefaultBtn(
+                                                event: () =>
+                                                    Navigator.pop(context),
+                                                titleSize: 10,
+                                                title: "OK",
+                                                bgColor: kSecondaryColor)),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                  ]),
+                                ),
+                              ).show()
+                            : localize(),
+                        titleSize: 10,
+                        title: "Localiser",
+                        bgColor: widget.alert.alert.alertStatus == "IN PROGRESS"
+                            ? Colors.grey
+                            : kSecondaryColor)),
+                const SizedBox(
+                  width: 5,
+                ),
+                SizedBox(
+                    width: 100,
+                    height: 30,
+                    child: DefaultBtn(
+                        event: () => call(),
+                        title: "Appeler",
+                        titleSize: 10,
+                        bgColor: kPrimaryColor))
+              ],
+            )
           ],
         )
       ]),

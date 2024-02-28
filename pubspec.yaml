@@ -14,7 +14,8 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   circular_bottom_navigation: ^2.3.0
-  intl: ^0.18.0
+  intl: ^0.17.0
+  icons_launcher: ^2.1.7
   http: ^1.1.2
   accordion: ^2.6.0
   restart_app: ^1.2.1
@@ -35,11 +36,15 @@ dependencies:
   firebase_auth: ^4.16.0
   sqflite: ^2.3.2
   fluttertoast: ^8.2.4
-  awesome_notifications: ^0.8.2
+  flutter_animated_icons: ^1.0.1
   flutter_phone_direct_caller: ^2.1.1
   path: ^1.8.3
   flutter_spinkit: ^5.2.0
   icons_plus: ^5.0.0
+  rxdart: ^0.27.7
+
+  awesome_notifications: ^0.7.4+1
+  lottie: ^1.4.3
 
 icons_launcher:
   image_path: "assets/images/ic_launcher.png"
@@ -59,3 +64,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/lotties/

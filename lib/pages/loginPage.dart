@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.transparent,
                               elevation: 40,
                               child: Container(
-                                height: 400,
+                                height: 420,
                                 width: kWidth(context),
                                 color: Colors.transparent,
                                 child: PageView(
@@ -182,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                             child: Container(
-                                              height: 400,
+                                              height: 420,
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(5)),
@@ -316,7 +316,7 @@ class _LoginPageState extends State<LoginPage> {
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                             child: Container(
-                                              height: 400,
+                                              height: 420,
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(5)),

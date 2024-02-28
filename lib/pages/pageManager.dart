@@ -1,7 +1,7 @@
 import 'package:circular_bottom_navigation/circular_bottom_navigation.dart';
 import 'package:circular_bottom_navigation/tab_item.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+
 import 'package:vbs_sos/constants.dart';
 import 'package:vbs_sos/models/employee.dart';
 import 'package:vbs_sos/pages/adminPage.dart';

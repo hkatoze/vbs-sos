@@ -4,10 +4,13 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:vbs_sos/constants.dart';
+import 'package:vbs_sos/models/employee.dart';
 import 'package:vbs_sos/pages/components/alertPopup.dart';
 import 'package:vbs_sos/pages/mainpage.dart';
+import 'package:vbs_sos/services/local_db_services.dart';
 
 import 'firebase_options.dart';
 
@@ -28,24 +31,29 @@ class MyHttpOverrides extends HttpOverrides {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
+  await initializeDateFormatting('fr_FR', null);
   AwesomeNotifications().initialize(
-      null,
-      [
-        NotificationChannel(
-            channelGroupKey: 'basic_channel_group',
-            channelKey: 'basic_channel',
-            channelName: 'Basic notifications',
-            channelDescription: 'Notification channel for basic tests',
-            defaultColor: kWhite,
-            ledColor: Colors.white,
-            importance: NotificationImportance.Max)
-      ],
-      channelGroups: [
-        NotificationChannelGroup(
-            channelGroupKey: 'basic_channel_group',
-            channelGroupName: 'Basic group')
-      ],
-      debug: true);
+    null,
+    [
+      NotificationChannel(
+          channelGroupKey: 'basic_channel_group',
+          channelKey: 'basic_channel',
+          channelName: 'Basic notifications',
+          channelDescription: 'Notification channel for basic tests',
+          defaultColor: kWhite,
+          ledColor: Colors.white,
+          importance: NotificationImportance.Max)
+    ],
+    channelGroups: [
+      NotificationChannelGroup(
+          channelGroupKey: 'basic_channel_group',
+          channelGroupName: 'Basic group')
+    ],
+    debug: true,
+  );
+  AwesomeNotifications().setListeners(
+    onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -63,6 +71,26 @@ void main() async {
   ));
 }
 
+class NotificationController {
+  static Future<void> onActionReceivedMethod(
+      ReceivedAction receivedAction) async {
+    String actionKey = receivedAction.buttonKeyPressed ?? "";
+
+    switch (actionKey) {
+      case 'EN_DANGER_BUTTON':
+        // Action for "EN DANGER" button
+        // Put your code here
+        break;
+      case 'HORS_DE_DANGER_BUTTON':
+        // Action for "HORS DE DANGER" button
+        // Put your code here
+        break;
+      default:
+        break;
+    }
+  }
+}
+
 class VbsSosApp extends StatefulWidget {
   const VbsSosApp({Key? key}) : super(key: key);
 
@@ -72,13 +100,14 @@ class VbsSosApp extends StatefulWidget {
 
 class _VbsSosAppState extends State<VbsSosApp> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
+  Employee? employee;
   @override
   void initState() {
     super.initState();
+    fetchEmployeeInformation();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint('Notification reçue: ${message.data}');
-      launchPop(context);
+      launchPop(context, message.data, employee!.employeeId);
     });
 
     if (Platform.isIOS) {
@@ -91,6 +120,15 @@ class _VbsSosAppState extends State<VbsSosApp> {
     }
 
     _firebaseMessaging.getToken().then((token) {});
+  }
+
+  void fetchEmployeeInformation() async {
+    final Employee? loggedInEmployee =
+        await DatabaseManager.instance.getLoggedInEmployee();
+
+    setState(() {
+      employee = loggedInEmployee;
+    });
   }
 
   @override
@@ -124,11 +162,15 @@ Future<void> showNotificationWithPopupContent() async {
   );
 }
 
-void launchPop(BuildContext context) async {
+void launchPop(BuildContext context, Map<String, dynamic> notificationData,
+    int employeeId) async {
   AwesomeDialog(
     context: context,
     animType: AnimType.scale,
     dialogType: DialogType.warning,
-    body: const AlertPopup(),
+    body: AlertPopup(
+      notificationData: notificationData,
+      employeeId: employeeId,
+    ),
   ).show();
 }

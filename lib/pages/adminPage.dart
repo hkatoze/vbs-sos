@@ -10,6 +10,7 @@ import 'package:vbs_sos/constants.dart';
 import 'package:vbs_sos/models/alertPivot.dart';
 import 'package:vbs_sos/models/employee.dart';
 import 'package:vbs_sos/pages/components/accordionListItem.dart';
+import 'package:vbs_sos/pages/components/alertFloatingActionButton.dart';
 
 import 'package:vbs_sos/pages/components/myAppBar.dart';
 import 'package:vbs_sos/pages/components/myDrawer.dart';
@@ -25,28 +26,11 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool alertGeneral = false;
 
-  int _inDanger = 0;
-  int _safe = 0;
-  int _inProgress = 0;
   @override
   void initState() {
     super.initState();
-    getAlertCounts();
-  }
-
-  void getAlertCounts() async {
-    int dangerCount =
-        await countAlerts(widget.employee.employeeId, "IN DANGER");
-    int safeCount = await countAlerts(widget.employee.employeeId, "SAFE");
-
-    int progressCount =
-        await countAlerts(widget.employee.employeeId, "IN PROGRESS");
-    setState(() {
-      _inDanger = dangerCount;
-      _safe = safeCount;
-      _inProgress = progressCount;
-    });
   }
 
   @override
@@ -57,6 +41,14 @@ class _AdminPageState extends State<AdminPage> {
         appBar: MyAppBar(_scaffoldKey, context, widget.employee),
         drawer: MyDrawer(
           employee: widget.employee,
+        ),
+        floatingActionButton: AlarmFloatingActionButton(
+          employee: widget.employee,
+          onPressed: () {
+            setState(() {
+              alertGeneral = !alertGeneral;
+            });
+          },
         ),
         body: Column(
           children: [
@@ -113,22 +105,46 @@ class _AdminPageState extends State<AdminPage> {
                                       fontSize: 17,
                                       fontWeight: FontWeight.w700),
                                 ),
-                                Text(
-                                  _inDanger.toString(),
-                                  style: TextStyle(
-                                      color: kWhite,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700),
+                                StreamBuilder<String>(
+                                  stream: alertGeneral
+                                      ? countAlerts(widget.employee.companyId,
+                                          "IN DANGER")
+                                      : countNeedHelpAlerts(
+                                          widget.employee.companyId,
+                                          "IN DANGER"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasError) {
+                                      return Text(
+                                        '${snapshot.error}',
+                                        style: TextStyle(
+                                            color: kWhite,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700),
+                                      );
+                                    } else {
+                                      String alertCount = snapshot.data ?? "";
+                                      return Text(
+                                        alertCount,
+                                        style: TextStyle(
+                                            color: kWhite,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700),
+                                      );
+                                    }
+                                  },
                                 )
                               ]),
                           headerBackgroundColor: kPrimaryColor,
                           content: SizedBox(
                             height: kHeight(context) * 0.5,
                             child: StreamBuilder<List<AlertPivot>>(
-                                stream: streamAlertPivots(
-                                    widget.employee.employeeId,
-                                    widget.employee.companyId,
-                                    "IN DANGER"),
+                                stream: alertGeneral
+                                    ? streamAlertPivots(
+                                        widget.employee.employeeId,
+                                        widget.employee.companyId,
+                                        "IN DANGER")
+                                    : streamNeedHelpAlerts(
+                                        widget.employee.companyId, "IN DANGER"),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
@@ -189,22 +205,45 @@ class _AdminPageState extends State<AdminPage> {
                                       fontSize: 17,
                                       fontWeight: FontWeight.w700),
                                 ),
-                                Text(
-                                  _safe.toString(),
-                                  style: TextStyle(
-                                      color: kWhite,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700),
+                                StreamBuilder<String>(
+                                  stream: alertGeneral
+                                      ? countAlerts(
+                                          widget.employee.companyId, "SAFE")
+                                      : countNeedHelpAlerts(
+                                          widget.employee.companyId, "SAFE"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasError) {
+                                      return Text(
+                                        '${snapshot.error}',
+                                        style: TextStyle(
+                                            color: kWhite,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700),
+                                      );
+                                    } else {
+                                      String alertCount = snapshot.data ?? "";
+                                      return Text(
+                                        alertCount,
+                                        style: TextStyle(
+                                            color: kWhite,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700),
+                                      );
+                                    }
+                                  },
                                 )
                               ]),
                           headerBackgroundColor: Colors.green,
                           content: SizedBox(
                             height: kHeight(context) * 0.5,
                             child: StreamBuilder<List<AlertPivot>>(
-                                stream: streamAlertPivots(
-                                    widget.employee.employeeId,
-                                    widget.employee.companyId,
-                                    "SAFE"),
+                                stream: alertGeneral
+                                    ? streamAlertPivots(
+                                        widget.employee.employeeId,
+                                        widget.employee.companyId,
+                                        "SAFE")
+                                    : streamNeedHelpAlerts(
+                                        widget.employee.companyId, "SAFE"),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
@@ -265,22 +304,47 @@ class _AdminPageState extends State<AdminPage> {
                                       fontSize: 17,
                                       fontWeight: FontWeight.w700),
                                 ),
-                                Text(
-                                  _inProgress.toString(),
-                                  style: TextStyle(
-                                      color: kWhite,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700),
+                                StreamBuilder<String>(
+                                  stream: alertGeneral
+                                      ? countAlerts(widget.employee.companyId,
+                                          "IN PROGRESS")
+                                      : countNeedHelpAlerts(
+                                          widget.employee.companyId,
+                                          "IN PROGRESS"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasError) {
+                                      return Text(
+                                        '${snapshot.error}',
+                                        style: TextStyle(
+                                            color: kWhite,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700),
+                                      );
+                                    } else {
+                                      String alertCount = snapshot.data ?? "";
+                                      return Text(
+                                        alertCount,
+                                        style: TextStyle(
+                                            color: kWhite,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700),
+                                      );
+                                    }
+                                  },
                                 )
                               ]),
                           headerBackgroundColor: Colors.grey,
                           content: SizedBox(
                             height: kHeight(context) * 0.5,
                             child: StreamBuilder<List<AlertPivot>>(
-                                stream: streamAlertPivots(
-                                    widget.employee.employeeId,
-                                    widget.employee.companyId,
-                                    "IN PROGRESS"),
+                                stream: alertGeneral
+                                    ? streamAlertPivots(
+                                        widget.employee.employeeId,
+                                        widget.employee.companyId,
+                                        "IN PROGRESS")
+                                    : streamNeedHelpAlerts(
+                                        widget.employee.companyId,
+                                        "IN PROGRESS"),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
